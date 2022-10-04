@@ -1,7 +1,6 @@
 # FluorescenceDetectionScript
 
-This script has been developed to assist with the process of data collection from light microscopy images of microfluidic infection-on-a-chip devices. 
-It detects the area of bacterial fluorescence (from GFP or pHrodo) observed in the microchamber, via the following steps:
+This script has been developed as a Python Macro for FIJI, to assist with the process of data collection from light microscopy images of microfluidic infection-on-a-chip devices. It detects the area of bacterial fluorescence (from GFP or pHrodo) observed in the microchamber, via the following steps:
 - Duplicates the area selected by the ROI
 - Converts this duplicate to an 8 bit image
 - Creates a binary mask of fluorescence/background
