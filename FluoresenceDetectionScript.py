@@ -9,6 +9,7 @@ from ini.trakem2.imaging.filters import ResetMinAndMax
 
 # Get currently selected image
 imp = WindowManager.getCurrentImage()
+#Resets the displayed min & max pixels to be the same as the images original min and max pixels
 ResetMinAndMax()
 frame = imp.getNFrames()
 # get frame interval
