@@ -1,7 +1,7 @@
 from ij import WindowManager, IJ
 from ij.gui import OvalRoi, WaitForUserDialog, GenericDialog
 from ij.measure import ResultsTable
-from ij.io import OpenDialog
+from ini.trakem2.imaging.filters import ResetMinAndMax
 
 # Author: Rachel Cass
 # Under supervision of Jennifer Payne
@@ -9,6 +9,7 @@ from ij.io import OpenDialog
 
 # Get currently selected image
 imp = WindowManager.getCurrentImage()
+ResetMinAndMax()
 frame = imp.getNFrames()
 # get frame interval
 # Create results table
@@ -23,7 +24,7 @@ roiNumber = int(gd.getNextNumber())
 
 # Select ovals of interest
 for j in range(0, roiNumber):
-    yolk = OvalRoi(0, 0, 350,350)
+    yolk = OvalRoi(0, 0, 180, 180)
     #Monash size: 180,180
     #Boston size: 350,350
     imp.setRoi(yolk)
@@ -39,13 +40,13 @@ for j in range(0, roiNumber):
         # Ensure 8 - bit
         IJ.run(crop, "8-bit", "")
 
-        # Set threshold (triangle, B&W, Dark background) - Apply
+        # Thresholding - 2 options: auto-thresholding and manual thresholding
         IJ.setAutoThreshold(crop, "Triangle dark")  # sets method as triangle & dark background setting
         IJ.run(crop, "Convert to Mask", "")  # sets mode as B&W
-        # IJ.setThreshold(imp, 30, 255, "black & white")
+        #IJ.setThreshold(crop, 60, 255, "black & white")  # Add this line for manual thresholding, comment out for auto
 
         # Return the ROI so that the area measured is of the yolk, not the entire cropped square
-        yolk = OvalRoi(0, 0, 350,350)
+        yolk = OvalRoi(0, 0, 180, 180)
         crop.setRoi(yolk)
 
         # Measure
@@ -61,20 +62,10 @@ for j in range(0, roiNumber):
         fluorescenceData.addValue('ROI', j + 1)
         fluorescenceData.addValue('TimePoint', i)
         fluorescenceData.addValue('Roi Area', area)
-        fluorescenceData.addValue('White Area', fluoroArea)
-        fluorescenceData.addValue('% White Area ', areaFraction)
+        fluorescenceData.addValue('Fluorescent Area', fluoroArea)
+        fluorescenceData.addValue('% Fluorescent Area ', areaFraction)
         fluorescenceData.addValue('Min Colour', minColour)
         fluorescenceData.addValue('Max Colour', maxColour)
 
 fluorescenceData.getResultsTable()
 fluorescenceData.show('Results')
-
-# Close and reopen file when user is done
-WaitForUserDialog("Click ok when done to close file.").show()
-imp.close()
-# Open file again so next series can be selected
-# path = OpenDialog.getLastDirectory()
-# filename = OpenDialog.getLastName()
-# file = path + filename
-# imp = IJ.openImage(file)
-# imp.show()
